@@ -1,0 +1,73 @@
+﻿@model stonks.Pages._StockTableModel
+@{
+}
+<script>
+    
+</script>
+
+<!--The table for the stock-->
+<div class="stockTable">
+    <form method="post">
+
+        <!--Error message-->
+        <div class="errorMessages text-left">
+            @if (Model.ErrorMessage != null)
+            {
+                <div class="alert alert-danger">
+                    <div class='h4'>Error</div>
+                    <ul>
+                        <li>@Model.ErrorMessage</li>
+                    </ul>
+                </div>
+            }
+        </div>
+
+        <!--Table header-->
+        <div class="row pb-2">
+            <div class="col-sm h4 mb-0">$@Model.Stock.Name</div>
+
+            <div class="col-sm text-right">
+                <button class="editButton btn btn-dark float-end">Edit</button>
+                <button class="cancelButton btn btn-dark float-end">Cancel</button>
+                <button class="saveButton btn btn-dark float-end">Save</button>
+            </div>
+        </div>
+
+        <!--Table-->
+        <table class="table pb-5 mb-5">
+            
+            <thead>
+                <tr>
+                    <th scope="col">Price per share ($)</th>
+                    <th scope="col">Shares</th>
+                    <th scope="col">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!--NOTE: A better way to handle needing to programmatically generate form input ids would be cool-->
+                @foreach (Models.PortfolioStock portfolioStock in Model.PortfolioStocks)
+                {
+                    <tr>
+                        <td>
+                            <input type="number" id=@(portfolioStock.PortfolioStockId + "price") placeholder="@portfolioStock.Price" value="@portfolioStock.Price" min="0" readonly />
+                            <label for=@(portfolioStock.PortfolioStockId + "price") hidden />
+                        </td>
+
+                        <td>
+                            <input type="number" id=@(portfolioStock.PortfolioStockId + "shares") placeholder="@portfolioStock.Shares" value="@portfolioStock.Shares" min="0" readonly />
+                            <label for=@(portfolioStock.PortfolioStockId + "shares") hidden />
+                        </td>
+
+                        <td>
+                            <input type="date" id=@(portfolioStock.PortfolioStockId + "date") placeholder="@portfolioStock.Date.ToString("yyyy-MM-dd")" value="@portfolioStock.Date.ToString("yyyy-MM-dd")" readonly />
+                            <label for=@(portfolioStock.PortfolioStockId + "date") hidden />
+                        </td>
+
+                        <input type="text" hidden id=@(portfolioStock.PortfolioStockId + "id") value="@portfolioStock.PortfolioStockId"/>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+    
+</div>

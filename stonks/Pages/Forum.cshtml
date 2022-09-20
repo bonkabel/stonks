@@ -1,0 +1,19 @@
+﻿@page
+@model stonks.Pages.ForumModel
+@{
+}
+
+<!--Sidebar-->
+<div class="col-lg-3 sidebar" style="background-color: lightgray; min-width:90px;">
+</div>
+
+<!--Main content-->
+<div class="col-lg-8 middle">
+    <div class="px-3">
+        @foreach (_ForumPostPreviewModel model in Model.Models)
+        {
+            @await Html.PartialAsync("_ForumPostPreview", model);
+        }
+        </div>
+    
+</div>

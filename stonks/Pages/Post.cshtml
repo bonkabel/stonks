@@ -1,0 +1,61 @@
+﻿@page "{id}"
+@model stonks.Pages.PostModel
+@{
+}
+
+<div class="col ">
+
+    <!--Post-->
+    <div class="row lightGray mt-3 pb-2 mx-0 mb-4">
+        <div class="col">
+            <p class="postLarge">@Model.Post.Title</p>
+
+            <p class="textSmall pb-4">@Model.PostUser</p>
+
+            <p class="pb-4">@Model.Post.Text</p>
+
+            <div class="row">
+                <p class="col-7 textSmall text-nowrap">@stonks.Classes.Helper.GetFormattedTags(Model.Tags)</p>
+                <p class="col-sm-4 textSmall text-nowrap text-right">@Model.Post.Date</p>
+                <p class="col-sm-1 textSmall text-nowrap text-right">report</p>
+            </div>
+        </div>
+    </div>
+
+    <!--Replies-->
+    @foreach (stonks.Models.PostReply postReply in Model.Replies)
+    {
+    <div class="row lightGray mt-3 pb-2 mx-0 mb-4">
+        <div class="col">
+            <p class="textSmall pb-4 pt-2">@Model.ReplyUsers[postReply].UserName</p>
+
+            <p>@postReply.Text</p>
+
+            <div class="row">
+                <p class="col-sm-11 text-nowrap text-right">@postReply.Date</p>
+                <p class="col-sm-1 text-nowrap text-right">report</p>
+            </div>
+        </div>
+    </div>
+    }
+
+
+    <!--Reply-->
+    <div class="lightGray col py-2">
+        <form method="post">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <span asp-validation-for="Input.Text"></span>
+            <div class="form-group">
+                <label class="d-none" for="reply">Reply</label>
+                <textarea asp-for="Input.Text" rows="4" id="reply" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-dark">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

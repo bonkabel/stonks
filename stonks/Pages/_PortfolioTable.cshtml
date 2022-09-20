@@ -1,0 +1,40 @@
+﻿@model stonks.Pages._PortfolioTableModel
+@{
+}
+<script>
+
+</script>
+
+<div>
+    @if (Model.PortfolioRows != null && Model.PortfolioRows.Length > 0)
+    {
+        <table class="table pb-5 mb-5">
+            <thead>
+                <tr>
+                    <th scope="col">Stock</th>
+                    <th scope="col">% of Portfolio</th>
+                    <th scope="col">Shares</th>
+                    <th scope="col">Average Purchase Price</th>
+                    <th scope="col">Current Price</th>
+                    <th scope="col">Total Return</th>
+                </tr>
+            </thead>
+            <tbody>
+                <div class="PortfolioTableContainer">
+                    @foreach (Classes.PortfolioRow row in Model.PortfolioRows)
+                    {
+                    <tr>
+                        <td>$@row.Ticker</td>
+                        <td>@string.Format("{0:n}", row.PercentPortfolio)</td>
+                        <td>@row.Shares</td>
+                        <td>@string.Format("{0:n}", row.AveragePricePurchase)</td>
+                        <td>@string.Format("{0:n}", row.AveragePriceCurrent)</td>
+                        <td>@string.Format("{0:n}", row.PercentReturn)%</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        }
+
+
+</div>

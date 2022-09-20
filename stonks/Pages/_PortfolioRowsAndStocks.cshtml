@@ -1,0 +1,24 @@
+﻿@model stonks.Pages._PortfolioRowsAndStocksModel
+@{
+}
+
+
+
+@await Html.PartialAsync("_PortfolioTable", new _PortfolioTableModel { PortfolioRows = Model.PortfolioRows.ToArray() })
+
+@if (Model.SuccessMessage != null)
+{
+    <div class="alert alert-success successMessage">@Model.SuccessMessage</div>
+}
+
+@if (Model.PortfolioStocks != null)
+{
+    foreach (Models.Stock stock in Model.Stocks)
+    {
+
+        <div class="portfolioStockContainer">
+            @await Html.PartialAsync("_StockTable", new _StockTableModel { Stock = stock, PortfolioStocks = Model.PortfolioStocks.Where(ps => ps.StockId == stock.StockId).ToArray(), ErrorMessage = Model.ErrorMessage })
+        </div>
+
+    }
+}

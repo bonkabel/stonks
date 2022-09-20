@@ -1,0 +1,24 @@
+﻿@model stonks.Pages._ChartModel
+@{
+}
+<script src="~/lib/JavaScript/drawChart.js"></script>
+<script>
+    // Load the Visualization API and the corechart package.
+    // Set a callback to run when the Google Visualization API is loaded.
+    
+    window.onload = function () {
+    };
+    google.charts.load('current', {
+        callback: function () {
+            drawChart('chart_div', @Html.Raw(Json.Serialize(Model.StockPrices)), false);
+        },
+        packages: ['corechart']
+    });
+
+    window.addEventListener('resize', drawChart);
+
+    
+    
+</script>
+
+<div id="chart_div" style="width:100%; max-width:100%; height: 40vw; max-height:100%; display: inline-block; margin: 0 auto"></div>

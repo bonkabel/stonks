@@ -1,0 +1,117 @@
+﻿@page "{id}"
+@model stonks.Pages.StockModel
+@{
+}
+
+<head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="~/lib/JavaScript/drawChart.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+    <script src="~/lib/JavaScript/chartSelectHandler.js"></script>
+    <script>
+
+        // Load the Visualization API and the corechart package.
+        // Set a callback to run when the Google Visualization API is loaded.
+        google.charts.load('current', {
+            callback: function () {
+                drawChart('chart_div', @Html.Raw(Json.Serialize(Model.StockPrices)), true);
+            },
+            packages: ['corechart']
+        });
+
+        $(window).resize(function () {
+            drawChart('chart_div', @Html.Raw(Json.Serialize(Model.StockPrices)), true);
+        });
+
+
+
+    </script>
+</head>
+
+<div class="middle">
+
+    @if (Model.UserId != null)
+    {
+        <!--The stock ticker-->
+        <div class="justify-content-center pt-4">
+            <h2 class="font-weight-bold mb-5 text-center">$@Model.Stock.Name</h2>
+        </div>
+
+        <!--The stock chart-->
+        <div id="chart_div" style="width:100%; height: 800px; display: inline-block; margin: 0 auto"></div>
+
+        <div class="container py-5">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-center">
+                            <form method="post">
+
+                                <!--Frontend validation-->
+                                <div asp-validation-summary="All" class="text-danger text-left"></div>
+
+                                <!--Backend validation-->
+                                <div class="text-danger text-left">
+                                    <ul>
+                                        @foreach (String message in Model.ErrorMessages)
+                                        {
+                                            <li>@message</li>
+                                        }
+                                    </ul>
+                                </div>
+
+                                <div class="form-group row mb-4">
+                                    <span asp-validation-for="Input.Date" class="col-sm-3 col-form-label">Date</span>
+                                    <div class="col-sm-8">
+                                        <input asp-for="Input.Date" type="datetime" display:inline class="form-control" id="date" />
+                                        <label for="date" hidden>Date</label>
+                                    </div>
+
+                                </div>
+
+                                <div class="form-group row mb-4">
+                                    <span asp-validation-for="Input.Price" class="col-sm-3 col-form-label">Price</span>
+                                    <div class="col-sm-8">
+                                        <input asp-for="Input.Price" min="1" step="any" id="price" />
+                                        <label for="price" hidden>Price</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group row mb-4">
+                                    <span asp-validation-for="Input.Shares" class="col-sm-3 col-form-label">Shares</span>
+                                    <div class="col-sm-8">
+                                        <input asp-for="Input.Shares" min="1" value="1" id="shares" />
+                                        <label for="shares" hidden>Shares</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn px-5 btn-outline-light btn-lg">Add to portfolio</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        if (this.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier) != null)
+        {
+            <div class="alert alert-danger mt-2" role="alert">ERROR: That is not a valid stock</div>
+        }
+        else
+        {
+            <div class="alert alert-danger mt-2" role="alert">ERROR: Please login!</div>
+        }
+    }
+</div>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

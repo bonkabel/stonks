@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - stonks</title>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="~/lib/jqueryui/jquery-ui.css" />
+    <script src="~/lib/jqueryui/jquery-ui.js"></script>
+
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <script src="~/lib/bootstrap/js/bootstrap.js"></script>
+
+
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css"/>
+    <script src="~/lib/font-awesome/js/all.js"></script>
+
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <main>
+        <header>
+            <!--Navbar-->
+            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark text-white">
+                <div class="container">
+
+                    <!--Logo-->
+                    <a class="display-1 navbar-brand text-white" style="font-size:30px; padding-top:0px" asp-area="" asp-page="/Index">stonks</a>
+
+                    <!--Navbar-->
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <!--Collapsable content-->
+                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                        <div class="navbar-nav flex-grow-1 align-items-center">
+
+                            @if (this.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier) != null)
+                            {
+                                <a class="text-white pr-3" asp-page="/Portfolio">Portfolio</a>
+                                <a class="text-white pr-3" asp-page="/Forum">Forum</a>
+                                <!--Searchbar-->
+                                <!-- TODO: search bar with suggestions without refreshing page -->
+                                @await Component.InvokeAsync("Search");
+                                //<a class="text-white" asp-page="/Search">Search</a>
+                            }
+
+                        </div>
+
+                        <!--_LoginPartial content-->
+                        <partial name="_LoginPartial" />
+                    </div>
+
+                    
+
+                </div>
+
+            </nav>
+        </header>
+
+        <div class="content container">
+            @RenderBody()
+        </div>
+
+        <footer class="footer text-muted">
+            <div class="container">
+                &copy; 2022 - stonks
+            </div>
+        </footer>
+    </main>
+    
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jqueryui/jquery-ui.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+

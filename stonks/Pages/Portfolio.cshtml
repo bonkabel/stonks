@@ -1,0 +1,342 @@
+﻿@page
+@model stonks.Pages.PortfolioModel
+@Html.AntiForgeryToken()
+@{
+
+}
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+<script src="~/lib/JavaScript/drawChart.js"></script>
+<script>
+
+    // Display the chart
+    function displayChart() {
+        var temp = $(".stock:checkbox:checked");
+        var stocks = []
+
+        for (var i of temp) {
+            stocks.push(i.id);
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Portfolio?handler=UpdateStocks",
+            data: { currentStocks: stocks },
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            }
+        })
+            .done(function (result) {
+                $("#chartContainer").html(result);
+            })
+    }
+
+    // Checks for value changed inside of the inputs in table
+    // Returns if the values have changed
+    function checkChanges(table) {
+        let elements = $(table).find("input[placeholder]");
+        let changed = false;
+
+        for (let i = 0; i < elements.length; i++) {
+            if ($(elements[i]).val() != $(elements[i]).attr("placeholder")) {
+                changed = true;
+            }
+        }
+
+        return changed;
+    }
+
+    // Get the parent that has parentClass from currentElement
+    // Return the parent element
+    function getParent(parentClass, currentElement) {
+
+        // Keep getting the parent until element has the targetClass
+        while (currentElement.getAttribute("class") == null || !currentElement.getAttribute("class").includes(parentClass)) {
+            currentElement = currentElement.parentNode;
+        }
+
+        return currentElement;
+        }
+
+    // Get the values from a list of html elements
+    // Return the values of the html elements
+    function getValues(elements) {
+        let values = [];
+        for (let i = 0; i < elements.length; i++) {
+            values.push($(elements).val());
+        }
+
+        return values;
+    }
+    
+    // validates input as a valid date
+    // returns true if input is a valid date
+    function validateDate(input) {
+        let regex = /^\d{4}\-\d{1,2}\-\d{1,2}$/;
+        let valid = true;
+        input = input.toString();
+
+        let dateSections = input.split("-");
+        let year = parseInt(dateSections[0]);
+        let month = parseInt(dateSections[1]);
+        let day = parseInt(dateSections[2]);
+
+        if (regex.test(regex)) {
+            valid = false;
+        }
+        else if (year < 0 || month <= 0 || month > 12) {
+            valid = false;
+        }
+
+        // Handle leap years
+        if (valid) {
+            let monthLengths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+            if ((year % 4 == 0 && year % 100 != 0) || (year % 400 == 0)) {
+                monthLengths[1] = 29
+            }
+
+            if (day <= 0 || day > monthLengths[month - 1]) {
+                valid = false;
+            }
+        }
+
+        return valid;
+    }
+
+    // Checks for errors, adds any error messages to errorElements
+    // inputs is the user inputs to validate
+    // errorType is the errorType to check for
+    // errorElements is the 
+    function errorMessages(inputs, errorType, errorElements) {
+        let i = 0;
+        let added = false;
+        while (!added && i < inputs.length) {
+            if (errorType == 'priceError') {
+                if (isNaN(inputs[i]) || inputs[i] < 0) {
+                    added = true;
+                    errorElements.push($("<li id='priceError'>Please ensure that the price is a valid number and that is greater than or equal to 0</li>"));
+                }
+            }
+            else if (errorType == 'shareError') {
+                if (isNaN(inputs[i]) || inputs[i] < 0) {
+                    added = true;
+                    errorElements.push($("<li id='shareError'>Please ensure that the shares is a valid number and that it is greater than or equal to 0</li>"));
+                }
+            }
+            else if (errorType == 'dateError') {
+                if (!validateDate(inputs[i])) {
+                    added = true;
+                    errorElements.push($("<li id='dateError'>Please ensure that the date is a valid date</li>"));
+                }
+            }
+            i++;
+        }
+
+    }
+
+    // Event handler for a checkbox being toggled
+    function toggleCheckbox(element) {
+        displayChart();
+    }
+
+    // Display the chart on load
+    $(document).ready(function () {
+        displayChart();
+    });
+
+    // This is to prevent the server from being overloaded
+    var doThing;
+    function resizeChart() {
+        displayChart();
+    }
+
+    window.onresize = function () {
+        $("#chart_div").remove();
+        clearTimeout(doThing);
+        doThing = setTimeout(function () {
+            resizeChart();
+        }, 100)
+    }
+
+    // Handler for edit button being clicked
+    $(document).on("click", ".editButton", function (event) {
+        event.preventDefault();
+        let table = getParent("stockTable", event.target);
+
+        $(table).find("input[readonly]").prop("readonly", false);
+
+    });
+
+    // Handler for the save button being clicked
+    $(document).on("click", ".saveButton", function (event) {
+        event.preventDefault();
+        let table = getParent("stockTable", event.target);
+
+        if (checkChanges(table)) {
+            let priceInputs = getValues($(table).find("input[id*='price']"));
+            let shareInputs = getValues($(table).find("input[id*='shares']"));
+            let dateInputs = getValues($(table).find("input[id*='date']"));
+            let idInputs = getValues($(table).find("input[id*='id']"));
+
+            let errorElements = [];
+
+            errorMessages(priceInputs, 'priceError', errorElements);
+            errorMessages(shareInputs, 'shareError', errorElements);
+            errorMessages(dateInputs, 'dateError', errorElements);
+
+            // Handle error messages
+            let errorMessageElement = $(table).find(".errorMessages");
+            // Remove all current error messages
+            $($(errorMessageElement).find("ul")).empty();
+
+            
+            if (errorElements.length > 0 && !$(errorMessageElement).hasClass("alert")) {
+                $(".successMessage").remove();
+                $(errorMessageElement).append("<div class='h4'>Error</div><ul></ul>");
+                $(errorMessageElement).addClass("alert");
+                $(errorMessageElement).addClass("alert-danger");
+            }
+            else if (errorElements == 0) {
+                $(errorMessageElement).empty();
+                $(errorMessageElement).removeClass("alert");
+                $(errorMessageElement).removeClass("alert-danger");
+            }
+
+            // Add error messages to the screen
+            for (let i = 0; i < errorElements.length; i++) {
+                $($(errorMessageElement).find("ul")).append(errorElements[i])
+            }
+
+            if (errorElements.length == 0) {
+                // Submit to server
+                $.ajax({
+                    type: "POST",
+                    url: "/Portfolio?handler=UpdatePortfolioStocks",
+                    data: { idInputs: idInputs, priceInputs: priceInputs, shareInputs: shareInputs, dateInputs: dateInputs },
+                    dataType: "text",
+                    cache: false,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("XSRF-TOKEN",
+                            $('input:hidden[name="__RequestVerificationToken"]').val());
+                    }
+                })
+                .done(function (result) {
+                    // this is a very hacky solution
+
+                    console.log(result);
+                    if ($(result).find("#chartContainer").length > 0 || result == null) {
+                        window.location.reload();
+                    }
+                    else {
+                        $(".PortfolioRowsAndStocks").html(result);
+                    }
+
+                    displayChart();
+                        
+                })
+            }
+
+            $(table).find("input").prop("readonly", true);
+        }
+    });
+
+    // Handler for the cancel button being clicked. Sets the inputs inside stockTable to readonly again.
+    $(document).on("click", ".cancelButton", function (event) {
+        event.preventDefault();
+        let table = getParent("stockTable", event.target);
+        let inputs = $(table).find("input");
+
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].placeholder != "") {
+                inputs[i].value = inputs[i].placeholder
+            }
+            
+        }
+
+        $(table).find("input").prop("readonly", true);
+
+    });
+
+    // Handler for delete button being clicked.  Removes the stock from the users portfolio
+    $(document).on("click", ".deleteButton", function (event) {
+        event.preventDefault();
+        let targetNode = getParent("form-check", event.target);
+        let stockName = $(targetNode).find("input")[0].id;
+
+        $(targetNode).remove();
+
+        $.ajax({
+            type: "POST",
+            url: "/Portfolio?handler=DeleteStock",
+            data: { stockname: stockName },
+            dataType: "text",
+            cache: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            }
+        })
+            .done(function (result) {
+                if ($(result).find("#chartContainer").length > 0 || result == null) {
+                    window.location.reload();
+                }
+                else {
+                    $(".PortfolioRowsAndStocks").html(result);
+                }
+
+                displayChart();
+
+            })
+        
+    });
+
+</script>
+
+
+<!--Sidebar-->
+<div class="col-lg-3" style="background-color: lightgray; min-width:90px;">
+    <h4 class="font-weight-normal pt-2">Portfolio</h4>
+    @if (Model.Stocks != null)
+    {
+        for (int i = 0; i < Model.Stocks.Count(); i++)
+        {
+        <div class="row form-check ml-0 pb-2">
+            <input id="@(Model.Stocks[i].Name)" class="form-check-input stock" type="checkbox" value=""  onchange="toggleCheckbox(this)" checked />
+
+            <label for="@(Model.Stocks[i].Name)" class="form-check-label" >$@Model.Stocks[i].Name</label>
+            <button class="buttonCircle deleteButton btn btn-dark fa-pull-right mr-2">
+                <i class="fa-solid fa-x"></i>
+            </button>
+                        
+        </div>
+        }
+    }
+</div>
+
+<!--Main content-->
+<div class="col-lg-8 middle">
+
+    @if (Model.UserId != null)
+    {
+        <!--The stock chart-->
+        <div id="chartContainer" class="pb-3"></div>
+
+        <!--PortfolioRows Table-->
+        <!--PortfolioStocks Tables-->
+        <div class="PortfolioRowsAndStocks">
+            @await Html.PartialAsync("_PortfolioRowsAndStocks", new _PortfolioRowsAndStocksModel { PortfolioRows = Model.PortfolioRows.ToArray(), Stocks = Model.Stocks.ToArray(), PortfolioStocks = Model.PortfolioStocks.ToArray() })
+        </div>
+    }
+    else
+    {
+    <div class="alert alert-danger mt-2" role="alert">ERROR: Please login!</div>
+    }
+
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
