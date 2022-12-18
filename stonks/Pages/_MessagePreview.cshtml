@@ -1,0 +1,22 @@
+﻿@model stonks.Pages._MessagePreviewModel
+@{
+}
+
+<div class="message row py-1" id="@Model.MessageId">
+
+    <div class="col-md-8 gx-3">
+        <a asp-page="/Message" asp-route-ID="@Model.MessageId" class="row postPreviewLarge postPreviewTop blackText">@Model.Title</a>
+        <div class="row gx-3">
+
+            <p class="col pl-0 textSmall">@Model.Username</p>
+        </div>
+    </div>
+
+    <div class="col-md p-0 pt-1 text-right">
+        <p class="postPreviewTop">@Model.DateSent</p>
+        <p class="reportButton textSmall pt-1">report</p> <!--TODO: Make this an actual report button-->
+    </div>
+
+    <p class="postId d-none">@Model.MessageId</p>
+
+</div>

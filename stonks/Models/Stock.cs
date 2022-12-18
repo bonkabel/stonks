@@ -31,5 +31,13 @@ namespace stonks.Models
         public int PeopleTracking { get; set; }
 
 
+        public Stock(Guid stockId, string name, int peopleTracking)
+        {
+            StockId = stockId;
+            Name = name;
+            PeopleTracking = peopleTracking;
+        }
+
+
     }
 }

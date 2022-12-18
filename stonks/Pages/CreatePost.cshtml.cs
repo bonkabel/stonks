@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using stonks.Data;
 using stonks.Models;
 
@@ -87,7 +88,7 @@ namespace stonks.Pages
 
                 await db.SaveChangesAsync();
             }
-            return null;
+            return Redirect("/Forum");
         }
 
 

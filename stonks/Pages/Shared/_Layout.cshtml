@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - stonks</title>
+    <title>stonks</title>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
     <link rel="stylesheet" href="~/lib/jqueryui/jquery-ui.css" />
@@ -23,11 +23,11 @@
     <main>
         <header>
             <!--Navbar-->
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-dark text-white">
-                <div class="container">
+            <nav class="navbar navbar-expand-md navbar-toggleable-md navbar-light bg-dark text-white">
+                <div class="container navContent">
 
                     <!--Logo-->
-                    <a class="display-1 navbar-brand text-white" style="font-size:30px; padding-top:0px" asp-area="" asp-page="/Index">stonks</a>
+                    <a class="display-1 navbar-brand text-white text-nowrap" style="font-size:30px; padding-top:0px" asp-area="" asp-page="/Index">stonks</a>
 
                     <!--Navbar-->
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -36,24 +36,32 @@
                     </button>
 
                     <!--Collapsable content-->
-                    <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <div class="navbar-collapse collapse d-md-inline-flex justify-content-between">
 
-                        <div class="navbar-nav flex-grow-1 align-items-center">
+                        <div class="navbar-nav flex-grow-1 align-items-md-center">
 
                             @if (this.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier) != null)
                             {
-                                <a class="text-white pr-3" asp-page="/Portfolio">Portfolio</a>
-                                <a class="text-white pr-3" asp-page="/Forum">Forum</a>
+                                <a class="text-white pr-3 pb-2 pb-md-0" asp-page="/Portfolio">Portfolio</a>
+                                <a class="text-white pr-3 pb-3 pb-md-0" asp-page="/Forum">Forum</a>
+
+                                if (this.User.IsInRole("Admin")) {
+                                    <a class="text-white pr-3 pb-3 pb-md-0" href="/Reports/post">Reports</a> 
+                                    <a class="text-white pr-3 pb-3 pb-md-0" href="/Metrics">Metrics</a> 
+                                }
+
                                 <!--Searchbar-->
-                                <!-- TODO: search bar with suggestions without refreshing page -->
                                 @await Component.InvokeAsync("Search");
-                                //<a class="text-white" asp-page="/Search">Search</a>
                             }
+
+
+                            
 
                         </div>
 
-                        <!--_LoginPartial content-->
+                        <!--LoginPartial content-->
                         <partial name="_LoginPartial" />
+                        
                     </div>
 
                     

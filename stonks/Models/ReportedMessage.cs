@@ -24,5 +24,13 @@ namespace stonks.Models
         /// </summary>
         [Required]
         public Guid MessageId { get; set; }
+
+        public ReportedMessage(Guid reportId, Guid messageId )
+        {
+            ReportId = reportId;
+            MessageId = messageId;
+        }
     }
+
+    
 }

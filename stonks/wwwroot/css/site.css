@@ -146,6 +146,11 @@ input[type=checkbox] {
 	margin-bottom: -4px;
 }
 
+/* Report Button */
+
+.reportButton:hover {
+	text-decoration:underline;
+}
 
 /* Misc */
 .lightGray {
@@ -157,6 +162,20 @@ input[type=checkbox] {
 }
 
 
+/* font-awesome button icons*/
+
+.buttonIcon {
+	color:white;
+}
+
+.buttonIcon:hover {
+	color: lightgray;
+}
+
+/* black text hyperlink style*/
+
+
+
 /* Media Rules*/
 @media screen and (max-width: 1000px) {
 	.content {
@@ -165,5 +184,11 @@ input[type=checkbox] {
 		padding: 0px;
 		max-width:1000px;
 		margin: 0px;
+	}
+
+	.navContent {
+		width:100%;
+		margin: 0px;
+		max-width:1000px;
 	}
 }

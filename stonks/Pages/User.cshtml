@@ -1,0 +1,70 @@
+﻿@page "{id}"
+@model stonks.Pages.UserModel
+@{
+}
+<script>
+    $(document).on("click", ".reportButton", function (event) {
+        event.preventDefault();
+        let userId = getParent("user", event.target).id;
+
+        $.ajax({
+            type: "POST",
+            url: "?handler=ReportUser",
+            data: { userId: userId },
+            cache: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            }
+        })
+            .done(function (result) {
+
+                $(event.target).html("Reported")
+                $(event.target).removeClass("reportButton");
+
+
+            })
+    });
+</script>
+
+@if (Model.ThisUser != null) {
+    <div class="user container py-5 h-100" id="@Model.ThisUser.Id">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12">
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+                        <div class="mt-md-4 pb-3">
+
+                            <h2 class="font-weight-bold mb-5 row">@Model.ThisUser.UserName</h2>
+
+                            <div class="row gx-3 pb-4">
+                                <p class="pr-3">Date Joined:</p>
+
+                                <p class="text-nowrap">@Model.ThisUser.DateCreated.ToLocalTime()</p>
+                            </div>
+
+                            <div class="row gx-3 pb-4">
+                                <p class="text-nowrap pr-3">Forum Posts:</p>
+                                <p>@Model.numForumPosts</p>
+                            </div>
+
+                            <div class="d-flex flex-row-reverse">
+                                <p class="">Ban</p>
+                                <p class="reportButton pr-4">Report</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else {
+    <div class="alert alert-danger" role="alert">
+        This user doesn't appear to exist.
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

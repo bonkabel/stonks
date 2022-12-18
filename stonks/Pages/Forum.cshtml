@@ -2,18 +2,53 @@
 @model stonks.Pages.ForumModel
 @{
 }
+<script>
+    $(document).on("click", ".reportButton", function (event) {
+        event.preventDefault();
+        let forumPostId = getParent("forumPostPreview", event.target).id;
+        console.log(forumPostId)
+        
+        $.ajax({
+            type: "POST",
+            url: "/Forum?handler=ReportPost",
+            data: { forumPostId: forumPostId },
+            dataType: "text",
+            cache: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            }
+        })
+            .done(function (result) {
+
+                $(event.target).html("reported")
+                $(event.target).removeClass("reportButton");
+                
+
+            })
+    });
+</script>
 
 <!--Sidebar-->
-<div class="col-lg-3 sidebar" style="background-color: lightgray; min-width:90px;">
+<div class="col-lg-3 py-2 sidebar align-items-center text-center" style="background-color: lightgray; min-width:90px;">
+    <a class="blackText h4 font-weight-normal" asp-page="/CreatePost">Create a post</a>
 </div>
 
 <!--Main content-->
 <div class="col-lg-8 middle">
     <div class="px-3">
-        @foreach (_ForumPostPreviewModel model in Model.Models)
+        @if (Model.Models != null)
         {
-            @await Html.PartialAsync("_ForumPostPreview", model);
+            foreach (_ForumPostPreviewModel model in Model.Models)
+            {
+                @await Html.PartialAsync("_ForumPostPreview", model)
+                ;
+            }
         }
+        
         </div>
-    
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

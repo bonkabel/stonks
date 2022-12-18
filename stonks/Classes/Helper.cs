@@ -3,6 +3,7 @@ using stonks.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace stonks.Classes
@@ -51,8 +52,26 @@ namespace stonks.Classes
         {
             bool valid = true;
             stock = null;
+			
 
-            valid = stockName.All(c => char.IsLetter(c));
+			if (stockName == null || stockName == "")
+            {
+                valid = false;
+            }
+            else
+            {
+				Regex.Replace(stockName, @"\s+", "");
+                if (stockName != "")
+                {
+					valid = stockName.All(c => char.IsLetter(c));
+				}
+                else
+                {
+                    valid = false;
+                }
+				
+			}
+            
 
             if (valid)
             {

@@ -5,16 +5,15 @@
             source: @Json.Serialize(Model)
         });
     });
-
 </script>
 
 <form asp-controller="Search" asp-action="DoSearch" method="get">
-    <div class="row">
-        <div class="ui-widget form-outline col-10 pr-0 ">
-            <input id="SearchTerm" name="SearchTerm" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
+    <div class="row pb-3 pb-md-0 flex-nowrap">
+        <div style="max-width:200px" class="ui-widget form-outline col-10 pr-0 ">
+            <input  id="SearchTerm" name="SearchTerm" class="form-control rounded" placeholder="Search" aria-label="Search" aria-describedby="search-addon" />
         </div>
         <button for="SearchTerm" id="search-button" type="submit" class="btn btn-outline-dark">
-            <i class="fas fa-search"></i>
+            <i class="fas fa-search buttonIcon"></i>
         </button>
     </div>
 </form>

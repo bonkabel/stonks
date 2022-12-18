@@ -35,7 +35,6 @@ namespace stonks.Controllers
         [HttpGet("[action]")]
         public ActionResult DoSearch(string SearchTerm)
         {
-            Guid? stockId = null;
             Stock stock = null;
 
 

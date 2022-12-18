@@ -1,13 +1,13 @@
 ﻿@model stonks.Pages._ForumPostPreviewModel
 @{
 }
-<div class="row py-1">
+<div class="forumPostPreview row py-1" id="@Model.PostId">
 
     <div class="col-md-8 gx-3">
         <a asp-page="/Post" asp-route-ID="@Model.PostId" class="row postPreviewLarge postPreviewTop blackText">@Model.Title</a>
         <div class="row gx-3">
             
-            <p class="col pl-0 textSmall">@Model.Username</p>
+            <a class="textSmall blackText" href="/User/@Model.UserId">@Model.Username</a>
 
             @if (Model.NumReplies == 1)
             {
@@ -25,7 +25,7 @@
 
     <div class="col-md p-0 pt-1 text-right">
         <p class="postPreviewTop">@Model.DatePosted</p>
-        <p class="textSmall pt-1">report</p> <!--TODO: Make this an actual report button-->
+        <p class="reportButton textSmall pt-1">report</p> <!--TODO: Make this an actual report button-->
     </div>
 
     <p class="postId d-none">@Model.PostId</p>

@@ -1,0 +1,60 @@
+﻿@page "{state}"
+@model stonks.Pages.MessagesModel
+@{
+}
+<script>
+    $(document).on("click", ".reportButton", function (event) {
+        event.preventDefault();
+        let messageId = getParent("message", event.target).id;
+
+        $.ajax({
+            type: "POST",
+            url: "?handler=ReportMessage",
+            data: { messageId: messageId },
+            cache: false,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader("XSRF-TOKEN",
+                    $('input:hidden[name="__RequestVerificationToken"]').val());
+            }
+        })
+            .done(function (result) {
+
+                $(event.target).html("reported")
+                $(event.target).removeClass("reportButton");
+
+
+            })
+    });
+</script>
+
+
+<!--Sidebar-->
+<div class="col-lg-3 py-2 sidebar align-items-center text-center" style="background-color: lightgray; min-width:90px;">
+    <div class="row">
+        <a class="text-center blackText h4 font-weight-normal col" href="/Messages/MESSAGES">Inbox</a>
+    </div>
+
+    <div class="row">
+        <a class="text-center blackText h4 font-weight-normal col" href="/Messages/SENT">Sent</a>
+    </div>
+    <div class="row">
+        <a class="text-center blackText h4 font-weight-normal col" href="/Messages/NEWS">News</a>
+    </div>
+    <div class="row">
+        <a class="text-center blackText h4 font-weight-normal col" asp-page="/SendMessage">Send a Message</a>
+    </div>
+</div>
+
+<!--Main content-->
+<div class="col-lg-8 middle">
+    <div class="px-3">
+        @if (Model.Models != null)
+        {
+            foreach (_MessagePreviewModel model in Model.Models)
+            {
+                @await Html.PartialAsync("_MessagePreview", model)
+            }
+        }
+        
+        </div>
+</div>

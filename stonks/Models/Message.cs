@@ -49,6 +49,19 @@ namespace stonks.Models
         [Required]
         public string Text { get; set; }
 
+        public Message()
+        {
 
+        }
+
+        public Message(Guid messageId, Guid sendorId, Guid recipientId, DateTime date, string title, string text)
+        {
+            MessageId = messageId;
+            SendorId = sendorId;
+            RecipientId = recipientId;
+            Date = date;
+            Title = title;
+            Text = text;
+        }
     }
 }

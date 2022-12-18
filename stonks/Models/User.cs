@@ -18,6 +18,8 @@ namespace stonks.Models
         /// </summary>
         public bool IsAdmin { get; set; }
 
+        [Required]
+        public DateTime DateCreated { get; set; }
         
 
     }

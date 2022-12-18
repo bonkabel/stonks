@@ -163,7 +163,7 @@ namespace stonks.Pages
                 await db.SaveChangesAsync();
             }
 
-            return Page();
+            return Redirect("/Portfolio");
         }
 
         // TODO: make this better maybe

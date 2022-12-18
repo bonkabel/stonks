@@ -31,4 +31,9 @@
     <None Include="wwwroot\lib\JavaScript\drawChart.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Migrations\" />
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

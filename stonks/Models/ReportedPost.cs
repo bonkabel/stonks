@@ -26,6 +26,15 @@ namespace stonks.Models
         [Required]
         public Guid PostId { get; set; }
 
+        public ReportedPost()
+        {
 
+        }
+
+        public ReportedPost(Guid reportId, Guid postId)
+        {
+            ReportId = reportId;
+            PostId = postId;
+        }
     }
 }

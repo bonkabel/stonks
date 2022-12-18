@@ -1,0 +1,39 @@
+﻿@page
+@model stonks.Pages.MetricsModel
+@{
+}
+
+@if (Model.CurrentUser != null && Model.CurrentUser.IsAdmin) {
+        <div class="col">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Stock</th>
+                    <th scope="col">People Tracking</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (KeyValuePair<Guid, stonks.Models.Stock> stock in Model.Stocks.OrderByDescending(kvp => kvp.Value.PeopleTracking))
+                {
+                        <tr>
+                            <td>@stock.Value.Name</td>
+                            <td>@stock.Value.PeopleTracking</td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+}
+else
+{
+    <div class="col-lg-3 py-2 sidebar align-items-center text-center" style="background-color: lightgray; min-width:90px;">
+    </div>
+    <div class="col-lg-8 middle">
+        <div class="alert alert-danger mt-3" role="alert">
+            You do not have permission to view this page.
+        </div>
+    </div>
+}
+
+

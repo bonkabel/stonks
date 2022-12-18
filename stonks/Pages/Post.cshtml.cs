@@ -84,7 +84,6 @@ namespace stonks.Pages
             set { input = value; }
         }
 
-
         /// <summary>
         /// The PostReply input model.  This is for verifying the user input
         /// </summary>
@@ -128,7 +127,7 @@ namespace stonks.Pages
 
             if (CheckFormData())
             {
-                db.PostReplies.Add(new PostReply(Guid.NewGuid(), id, new Guid(this.User.FindFirst(ClaimTypes.NameIdentifier).Value), Input.Text, DateTime.Now));
+                db.PostReplies.Add(new PostReply(Guid.NewGuid(), id, new Guid(this.User.FindFirst(ClaimTypes.NameIdentifier).Value), Input.Text, DateTime.UtcNow));
             }
 
             await db.SaveChangesAsync();
@@ -185,6 +184,36 @@ namespace stonks.Pages
                 }
                 
             }
+        }
+
+        public async Task<IActionResult> OnPostReportPost(string postId)
+        {
+            Post iPost = db.Posts.FirstOrDefault(p => p.PostId == new Guid(postId));
+            ReportedPost reportedPost = db.ReportedPosts.FirstOrDefault(rp => rp.PostId == rp.PostId);
+
+            if (iPost != null && reportedPost == null)
+            {
+                db.ReportedPosts.Add(new ReportedPost(Guid.NewGuid(), iPost.PostId));
+                await db.SaveChangesAsync();
+            }
+
+
+            return null;
+        }
+
+        public async Task<IActionResult> OnPostReportPostReply(string postReplyId)
+        {
+            PostReply postReply = db.PostReplies.FirstOrDefault(pr => pr.ReplyId == new Guid(postReplyId));
+            ReportedReplyPost reportedPostReply = db.ReportedReplyPosts.FirstOrDefault(rrp => rrp.ReplyPostId == postReply.ReplyId);
+
+            if (postReply != null && reportedPostReply == null)
+            {
+                db.ReportedReplyPosts.Add(new ReportedReplyPost(Guid.NewGuid(), postReply.ReplyId));
+                await db.SaveChangesAsync();
+            }
+
+
+            return null;
         }
     }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -324,7 +325,9 @@ namespace stonks.Pages
 
 					// Update db
 					db.PortfolioStocks.RemoveRange(toRemove);
-					db.PortfolioStocks.UpdateRange(portfolioStocks);
+					PeopleTracking[] tracking = db.PeopleTracking.Where(pt => (toRemove.Select(tr => tr.StockId)).ToArray().Contains(pt.StockId)).ToArray();
+					db.PeopleTracking.RemoveRange(tracking);
+                    db.PortfolioStocks.UpdateRange(portfolioStocks);
 					await db.SaveChangesAsync();
 
 					// Set Portfolio model
@@ -389,7 +392,10 @@ namespace stonks.Pages
 				if (Helper.ValidateStockName(stockName, out stock, db))
 				{
 					db.PortfolioStocks.RemoveRange(db.PortfolioStocks.Where(ps => ps.StockId == stock.StockId && ps.UserId == UserId.Value));
+					db.PeopleTracking.RemoveRange(db.PeopleTracking.Where(pt => pt.StockId == stock.StockId && pt.UserId == UserId.Value));
 					await db.SaveChangesAsync();
+
+
 
 					// Re-set Portfolio model
 					SetStocks();

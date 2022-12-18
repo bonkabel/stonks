@@ -36,6 +36,8 @@ namespace stonks.Data
         public DbSet<PostTag> PostTags { get; set; }
         public DbSet<PeopleTracking> PeopleTracking {get; set;}
         public DbSet<ReportedMessage> ReportedMessages { get; set; }
+        public DbSet<ReportedMessageReply> ReportedMessageReplies { get; set; }
+        public DbSet<ReportedReplyPost> ReportedReplyPosts { get; set; }
         public DbSet<ReportedPost> ReportedPosts { get; set; }
         public DbSet<ReportedUser> ReportedUsers { get; set; }
         public DbSet<Stock> Stocks { get; set; }

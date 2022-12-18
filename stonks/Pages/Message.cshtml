@@ -1,16 +1,17 @@
 ﻿@page "{id}"
-@model stonks.Pages.PostModel
+@model stonks.Pages.MessageModel
 @{
 }
+
 <script>
-    $(document).on("click", ".postReportButton", function (event) {
+    $(document).on("click", ".messageReportButton", function (event) {
         event.preventDefault();
-        let postId = getParent("postContainer", event.target).id;
+        let messageId = getParent("messageContainer", event.target).id;
 
         $.ajax({
             type: "POST",
-            url: "?handler=ReportPost",
-            data: { postId: postId },
+            url: "?handler=ReportMessage",
+            data: { messageId: messageId },
             cache: false,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("XSRF-TOKEN",
@@ -26,14 +27,14 @@
             })
     });
 
-    $(document).on("click", ".postReplyReportButton", function (event) {
+    $(document).on("click", ".messageReplyReportButton", function (event) {
         event.preventDefault();
-        let postReplyId = getParent("postReplyContainer", event.target).id;
+        let messageReplyId = getParent("messageReplyContainer", event.target).id;
 
         $.ajax({
             type: "POST",
-            url: "?handler=ReportPostReply",
-            data: { postReplyId: postReplyId },
+            url: "?handler=ReportMessageReply",
+            data: { messageReplyId: messageReplyId },
             cache: false,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader("XSRF-TOKEN",
@@ -51,46 +52,40 @@
 </script>
 
 <div class="col">
-    @if (Model.Post != null && Model.Replies != null)
-    {
-        <!--Post-->
-        <div class="postContainer row lightGray mt-3 pb-2 mx-0 mb-4" id="@Model.Post.PostId">
+    @if (Model.CurrentUser != null && (Model.CurrentUser.Id == Model.Message.SendorId.ToString() || Model.CurrentUser.Id == Model.Message.RecipientId.ToString() || Model.CurrentUser.IsAdmin)) {
+        <!--Message-->
+        <div class="messageContainer row lightGray mt-3 pb-2 mx-0 mb-4" id="@Model.Message.MessageId">
             <div class="col">
-                <p class="postLarge">@Model.Post.Title</p>
+                <p class="postLarge">@Model.Message.Title</p>
 
-                <a class="textSmall blackText" href="/User/@Model.PostUser.Id">@Model.PostUser</a>
+                <a class="textSmall blackText pb-4" href="@Model.Sendor.Id">@Model.Sendor.UserName</a>
 
-
-                <p class="pb-4 pt-4">@Model.Post.Text</p>
+                <p class="pb-4">@Model.Message.Text</p>
 
                 <div class="row">
-                    <p class="col-7 textSmall text-nowrap">@stonks.Classes.Helper.GetFormattedTags(Model.Tags)</p>
-                    <p class="col-sm-4 textSmall text-nowrap text-right">@Model.Post.Date</p>
-                    <p class="postReportButton reportButton col-sm-1 textSmall text-nowrap text-right">report</p>
+                    <p class="col-7"></p>
+                    <p class="col-sm-4 textSmall text-nowrap text-right">@Model.Message.Date</p>
+                    <p class="messageReportButton reportButton col-sm-1 textSmall text-nowrap text-right">report</p>
                 </div>
             </div>
         </div>
 
         <!--Replies-->
-        @foreach (stonks.Models.PostReply postReply in Model.Replies)
+        @foreach (stonks.Models.MessageReply messageReply in Model.Replies)
         {
-            <div class="postReplyContainer row lightGray mt-3 pb-2 mx-0 mb-4" id="@postReply.ReplyId">
+            <div class="messageReplyContainer row lightGray mt-3 pb-2 mx-0 mb-4" id="@messageReply.ReplyId">
                 <div class="col">
-                    <div class="pb-4 pt-2">
-                        <a class="textSmall blackText" href="/User/@Model.ReplyUsers[postReply].Id">@Model.ReplyUsers[postReply].UserName</a>
-                    </div>
+                    <a class="textSmall blackText" href="/User/@Model.ReplyUsers[messageReply].Id">@Model.ReplyUsers[messageReply].UserName</a>
 
-
-                    <p>@postReply.Text</p>
+                    <p>@messageReply.Text</p>
 
                     <div class="row">
-                        <p class="col-sm-11 text-nowrap text-right textSmall">@postReply.Date</p>
-                        <p class="postReplyReportButton reportButton col-sm-1 text-nowrap text-right textSmall">report</p>
+                        <p class="col-sm-11 text-nowrap text-right">@messageReply.Date</p>
+                        <p class="messageReplyReportButton reportButton col-sm-1 text-nowrap text-right">report</p>
                     </div>
                 </div>
             </div>
         }
-
 
         <!--Reply-->
         <div class="lightGray col py-2">
@@ -107,8 +102,8 @@
             </form>
         </div>
     }
-
     
+
 </div>
 
 @section Scripts {

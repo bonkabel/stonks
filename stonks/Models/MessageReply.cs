@@ -43,5 +43,18 @@ namespace stonks.Models
         [Required]
         public DateTime Date { get; set; }
 
+        public MessageReply()
+        {
+
+        }
+
+        public MessageReply(Guid replyId, Guid messageId, Guid userId, string text, DateTime date)
+        {
+            ReplyId = replyId;
+            MessageId = messageId;
+            UserId = userId;
+            Text = text;
+            Date = date;
+        }
     }
 }

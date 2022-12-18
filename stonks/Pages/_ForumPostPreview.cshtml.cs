@@ -22,6 +22,17 @@ namespace stonks.Pages
             set { postId = value; }
         }
 
+        private Guid userId;
+
+        /// <summary>
+        /// The user that made the post
+        /// </summary>
+        public Guid UserId
+        {
+            get { return userId; }
+            set { userId = value; }
+        }
+
         private string title;
 
         /// <summary>
@@ -77,6 +88,7 @@ namespace stonks.Pages
             set { datePosted = value; }
         }
 
+
         /// <summary>
         /// Empty constructor.
         /// </summary>
@@ -94,9 +106,10 @@ namespace stonks.Pages
         /// <param name="numReplies">The number of replies to the post</param>
         /// <param name="tags">The tags of the post</param>
         /// <param name="datePosted">The date the post was posted</param>
-        public _ForumPostPreviewModel(Guid postId, string title, string username, int numReplies, Tag[] tags, DateTime datePosted)
+        public _ForumPostPreviewModel(Guid postId, string title, string username, int numReplies, Tag[] tags, DateTime datePosted, Guid userId)
         {
             PostId = postId;
+            UserId = userId;
             Title = title;
             Username = username;
             NumReplies = numReplies;
