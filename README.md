@@ -1,11 +1,11 @@
 # # stonks
-A web application that allows user to track stocks
+A web application that allows users to track stocks
 
 ![Screenshot of a website with a graph tracking multiple stocks in a users portfolio](docs/websiteimage.PNG)
 
 ## Features
 - Users can track stocks in their portfolio
-- A forum
+- Forum
 - Messaging between users
 - Report functionality
 - Metrics for admins
