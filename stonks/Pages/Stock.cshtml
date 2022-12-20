@@ -64,7 +64,7 @@
                                 <div class="form-group row mb-4">
                                     <span asp-validation-for="Input.Date" class="col-sm-3 col-form-label">Date</span>
                                     <div class="col-sm-8">
-                                        <input asp-for="Input.Date" type="datetime" display:inline class="form-control" id="date" />
+                                        <input asp-for="Input.Date" type="datetime" display:inline class="form-control" id="date" value="@Model.PlaceholderData.Date" />
                                         <label for="date" hidden>Date</label>
                                     </div>
 
@@ -73,7 +73,7 @@
                                 <div class="form-group row mb-4">
                                     <span asp-validation-for="Input.Price" class="col-sm-3 col-form-label">Price</span>
                                     <div class="col-sm-8">
-                                        <input asp-for="Input.Price" min="1" step="any" id="price" />
+                                        <input asp-for="Input.Price" min="1" step="any" id="price" value="@Model.PlaceholderData.Price"/>
                                         <label for="price" hidden>Price</label>
                                     </div>
                                 </div>
@@ -81,7 +81,7 @@
                                 <div class="form-group row mb-4">
                                     <span asp-validation-for="Input.Shares" class="col-sm-3 col-form-label">Shares</span>
                                     <div class="col-sm-8">
-                                        <input asp-for="Input.Shares" min="1" value="1" id="shares" />
+                                        <input asp-for="Input.Shares" min="1" value="1" id="shares"/>
                                         <label for="shares" hidden>Shares</label>
                                     </div>
                                 </div>

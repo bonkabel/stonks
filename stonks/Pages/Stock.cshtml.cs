@@ -39,8 +39,6 @@ namespace stonks.Pages
             set { stock = value; }
         }
 
-        //public List<StockPrice> StockPrices { get; set; }
-
         private StockPrice[] stockPrices;
 
         /// <summary>
@@ -71,6 +69,24 @@ namespace stonks.Pages
         {
             get { return errorMessages; }
             set { errorMessages = value; }
+        }
+
+        private Data placeholderData;
+
+        /// <summary>
+        /// Data that we can put in the form to add a stock so it's not empty
+        /// </summary>
+        public Data PlaceholderData
+        {
+            get { return placeholderData; }
+            set { placeholderData = value; }
+        }
+
+        public class Data
+        {
+            public DateTime Date { get; set; }
+
+            public Decimal Price { get; set; }
         }
 
         /// <summary>
@@ -113,6 +129,7 @@ namespace stonks.Pages
             {
                 UserId = new Guid(this.User.FindFirst(ClaimTypes.NameIdentifier).Value);
                 SetupValues(id);
+                SetupPlaceholderData();
             }
         }
 
@@ -192,6 +209,14 @@ namespace stonks.Pages
             }
 
             return valid;
+        }
+
+
+        private void SetupPlaceholderData()
+        {
+            PlaceholderData = new Data();
+            PlaceholderData.Date = new DateTime(2021, 9, 24);
+            PlaceholderData.Price = db.StockPrices.First(sp => sp.Date == PlaceholderData.Date).Open;
         }
     }
 }
